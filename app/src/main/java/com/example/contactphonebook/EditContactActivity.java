@@ -16,43 +16,44 @@ import static com.example.contactphonebook.Key.KEY_CONTACT_ID;
 import static com.example.contactphonebook.Key.KEY_CONTACT_ID_EDIT;
 import static com.example.contactphonebook.Key.KEY_CONTACT_ID_PROFILE;
 
-public class ProfileContact extends AppCompatActivity {
+public class EditContactActivity extends AppCompatActivity {
 
-    Button btnDelete, btnEdit;
-    TextView txtFirstName, txtLastName, txtMobile, txtPhone, txtEmail, txtAddress;
+    Contact contact;
+
+    Button btnCancel, btnSave;
+    EditText txtFirstName, txtLastName, txtMobile, txtPhone, txtEmail, txtAddress;
     private int id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile_contact);
+        setContentView(R.layout.activity_edit_contact);
 
         init();
         setDate();
 
-        btnDelete.setOnClickListener(new View.OnClickListener() {
+        btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ContactHelper helper = new ContactHelper(ProfileContact.this);
-                helper.deleteRow(id);
-
-                Log.d("ProfileContact-Delete: ", String.valueOf(id));
-
-                Toast.makeText(ProfileContact.this, "Contact Deleted", Toast.LENGTH_SHORT).show();
-
-                Intent intent = new Intent(ProfileContact.this, MainActivity.class);
+                Intent intent = new Intent(EditContactActivity.this,ProfileContact.class);
+                intent.putExtra(KEY_CONTACT_ID,id);
                 startActivity(intent);
             }
         });
 
-        btnEdit.setOnClickListener(new View.OnClickListener() {
+        btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ProfileContact.this, EditContactActivity.class);
-                intent.putExtra(KEY_CONTACT_ID_PROFILE,id);
 
-                Log.d("ProfileContact-Edit: ", String.valueOf(id));
+                ContactHelper helper = new ContactHelper(EditContactActivity.this);
+                helper.updateRow(id,txtFirstName.getText().toString(),txtLastName.getText().toString(),txtMobile.getText().toString(),txtPhone.getText().toString(),txtEmail.getText().toString(),txtAddress.getText().toString());
 
+                Log.d("EditContact-Edit", String.valueOf(txtFirstName));
+
+                Toast.makeText(EditContactActivity.this, "Contact Change Saved", Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(EditContactActivity.this, ProfileContact.class);
+                intent.putExtra(KEY_CONTACT_ID,id);
                 startActivity(intent);
             }
         });
@@ -62,21 +63,21 @@ public class ProfileContact extends AppCompatActivity {
     @Override
     public void onBackPressed()
     {
-        Intent intent = new Intent(ProfileContact.this,MainActivity.class);
+        Intent intent = new Intent(EditContactActivity.this,MainActivity.class);
         startActivity(intent);
     }
 
     private void init() {
-        btnDelete = findViewById(R.id.profileContact_btn_Delete);
-        btnEdit = findViewById(R.id.profileContact_btn_Edit);
-        txtFirstName = findViewById(R.id.profileContact_tv_firstName);
-        txtLastName = findViewById(R.id.profileContact_tv_lastName);
-        txtMobile = findViewById(R.id.profileContact_tv_mobile);
-        txtPhone = findViewById(R.id.profileContact_tv_Phone);
-        txtEmail = findViewById(R.id.profileContact_tv_Email);
-        txtAddress = findViewById(R.id.profileContact_tv_Address);
+        btnCancel = findViewById(R.id.editContact_btn_Cancle);
+        btnSave = findViewById(R.id.editContact_btn_Save);
+        txtFirstName = findViewById(R.id.editContact_et_firstName);
+        txtLastName = findViewById(R.id.editContact_et_lastName);
+        txtMobile = findViewById(R.id.editContact_et_Mobile);
+        txtPhone = findViewById(R.id.editContact_et_Phone);
+        txtEmail = findViewById(R.id.editContact_et_Email);
+        txtAddress = findViewById(R.id.editContact_et_Address);
 
-        id = getIntent().getIntExtra(KEY_CONTACT_ID, 0);
+        id = getIntent().getIntExtra(KEY_CONTACT_ID_PROFILE, 0);
     }
 
     private void setDate()

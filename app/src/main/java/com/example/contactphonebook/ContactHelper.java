@@ -5,13 +5,14 @@ import android.database.Cursor;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class ContactHelper extends SQLiteOpenHelper {
 
-    public static final int DBVersion = 2;
+    public static final int DBVersion = 3;
     public static String DBName = "DB_Contacts";
     public static String tableName = "contacts";
     public static String col_contactId = "contact_id";
@@ -57,5 +58,15 @@ public class ContactHelper extends SQLiteOpenHelper {
         return database.rawQuery("SELECT * FROM "+tableName+" WHERE "+col_contactId+"="+id+";",null);
     }
 
+    public void deleteRow(int id)
+    {
+        database = getWritableDatabase();
+        database.execSQL("DELETE FROM " +tableName+ " WHERE " +col_contactId+ " = " +id+ ";");
+    }
 
+    public void updateRow(int id, String firstName, String lastName, String mobile, String phone, String email, String address)
+    {
+        database = getWritableDatabase();
+        database.execSQL("UPDATE " + tableName + " SET " + col_firstName + " = '" +firstName+ "', " + col_lastName + " = '" +lastName+  "', " + col_mobile + " = '" +mobile+ "', " + col_phone + " = '" +phone+  "', " + col_email +" = '" +email+  "', " + col_address +" = '" +address+ "' WHERE " +col_contactId+ "= '" +id+ "' ;");
+    }
 }
